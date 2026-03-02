@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package aura.control.v1;
+
+// Comando enviado desde el controlador (Python/IA) al hardware (C++)
+message ActuatorCommand {
+  uint32 id = 1;
+  double target_position_nm = 2;
+  enum ControlMode {
+    POSITION = 0;
+    CALIBRATE = 1;
+    EMERGENCY_STOP = 2;
+  }
+  ControlMode mode = 3;
+}
+
+// Estado reportado por el hardware a 1kHz [cite: 28]
+message ActuatorState {
+  uint32 id = 1;
+  double position_nm = 2;
+  double voltage = 3;
+  double temperature_c = 4;
+  uint64 timestamp_ns = 5;
+}
+
+message TelemetryStream {
+  repeated ActuatorState actuators = 1;
+}
+
+service MirrorControlService {
+  // Streaming bidireccional: comandos van, telemetría vuelve [cite: 28]
+  rpc StreamActuators(stream ActuatorCommand) returns (stream TelemetryStream);
+}
