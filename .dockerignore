@@ -1,0 +1,7 @@
+**/.git
+**/build
+**/generated
+**/.venv
+**/__pycache__
+.python-version
+# uv.lock  <-- ASEGÚRATE DE QUE NO ESTÉ AQUÍ

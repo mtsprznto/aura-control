@@ -1,0 +1,27 @@
+services:
+  aura-core:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["./aura_server"]
+    ports:
+      - "50051:50051"
+    networks:
+      - aura-net
+
+  aura-ai:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: ["/uvbin/uv", "run", "python", "aura-ai/services/telemetry_client.py"]
+    depends_on:
+      - aura-core
+    environment:
+      - GRPC_SERVER_ADDRESS=aura-core:50051
+      - UV_LINK_MODE=copy # Recomendado para Docker
+    networks:
+      - aura-net
+
+networks:
+  aura-net:
+    driver: bridge

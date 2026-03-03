@@ -12,3 +12,4 @@ wheels/
 .vscode
 base-doc
 __pycache__
+debug.txt
